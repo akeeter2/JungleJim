@@ -27,11 +27,14 @@ public class Player : MonoBehaviour
     private Vector3 velocity;
     private float velocityXSmoothing;
 
-    private Controller2D controller;
+    private Controller2D controller; //2D controller is whats calling controller
 
     private Vector2 directionalInput;
     private bool wallSliding;
     private int wallDirX;
+
+	private Animator anim;
+	private SpriteRenderer SR;
 
     private void Start()
     {
@@ -39,6 +42,10 @@ public class Player : MonoBehaviour
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+
+		anim = GetComponent<Animator> (); //This is what calls the animator
+
+		SR = GetComponent<SpriteRenderer> (); 
     }
 
     private void Update()
@@ -52,6 +59,20 @@ public class Player : MonoBehaviour
         {
             velocity.y = 0f;
         }
+
+		if (velocity.x > 0.1) { //more than one line in an if statement requires brackets {}
+			anim.SetBool ("running", true); 
+			SR.flipX = false;
+		
+		} else if (velocity.x < -0.1) {
+			anim.SetBool ("running", true);
+			SR.flipX = true;
+		}
+		else {
+			anim.SetBool ("running", false);
+
+		}
+
     }
 
     public void SetDirectionalInput(Vector2 input)
